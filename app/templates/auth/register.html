@@ -1,0 +1,22 @@
+<!-- extends表明此页面继承自Hbase.html文件 -->
+{% extends 'base.html' %}
+
+<!-- 把{# {% block title %} #}放在 {# {% block header %} #} 内部，不但可以设置 title 块，还可以把其值作为 header 块的内容 -->
+{% block header %}
+    {% block title %}
+        <h1>注册</h1>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <form method="post">
+        <!-- input 标记使用了 required 属性，这是告诉浏览器该字段是必填的 -->
+        <label for="username">Username</label>
+        <input name="username" id="username" required>
+        
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+    
+        <input type="submit" value="Register">
+    </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!-- extends表明此页面继承自base.html文件 -->
+{% extends "base.html" %}
+
+
+{% block title %}
+    记录系统 | 可视化分析
+{% endblock %}
+
+
+{% block header %}
+    {% include 'RecordMoney/Header.html' %}
+{% endblock header %}
+
+
+{% block body %}
+    <!-- 创建一个分割条 -->
+    <div class="container-fluid" style="height:30px" ></div>
+
+    <div class="container-fluid row">
+        <!-- 左边2/12为filter页面 -->
+        <div class="col-sm-2">
+            {% include 'RecordMoney/Filter.html' %}
+        </div>
+
+        <!-- 右边10/12为display页面 -->
+        <div class="col-sm-10">
+            {% block display %}
+            {% endblock display %}
+        </div>
+    </div>
+
+    
+    <!-- 创建一个分割条 -->
+    <div class="container-fluid" style="height:30px" ></div>
+{% endblock body %}
+
+
+{% block footer %}
+    {% include 'RecordMoney/Footer.html' %}
+{% endblock footer %}

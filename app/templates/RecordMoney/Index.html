@@ -1,0 +1,144 @@
+<!-- extends表明此页面继承自base.html文件 -->
+{% extends "base.html" %}
+
+
+{% block title %}
+    记录系统 | 收支记录详情
+{% endblock %}
+
+
+{% block header %}
+    {% include 'RecordMoney/Header.html' %}
+{% endblock header %}
+
+
+{% block body%}
+    <!-- 创建一个分割条 background-color:#ddd" -->
+    <div class="container-fluid" style="height:0px" ></div>
+    
+    <!-- 筛选记录时间范围 -->
+    <div class="container-fluid shadow pt-4 pb-2">
+        <div class="row">
+            <!-- 时间范围提示 -->
+            <div class="col-sm-9">
+                <label class="text-info" style="font-size:20px">
+                    <strong>{{ time_filter_label }}</strong>
+                </label>
+            </div>
+    
+            <!-- 时间筛选器 -->
+            <div class="col-sm-3">
+                <form action="#" method="GET" role="form"> <!-- style="font-size:14px" -->
+                    <div class="input-group">
+                        <select class="custom-select text-center" id="time_filter" name="time_filter">
+                            <option value=''>---请选择时间范围---</option>
+                            <option value='1'>今日数据</option>
+                            <option value='2'>本周数据</option>
+                            <option value='3'>本月数据</option> 
+                            <option value='4'>本年数据</option>
+                        </select>
+                        <div class="input-group-append text-center">
+                            <button type="submit" class="btn btn-success">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 创建一个分割条 -->
+    <div class="container-fluid" style="height:20px" ></div>
+
+    <!-- 显示筛选后的收支记录 -->
+    <div class="container-fluid table-responsive-sm" >
+        <!-- 表格分页
+        <div class="col-3 text-right">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">上一页</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+                </ul>
+            </nav>
+        </div>
+        -->
+
+        <!-- 展示查询结果 -->
+        <table class="table table-hover text-center bg-light text-nowrap" >
+            <thead class="thead-dark"> 
+                <tr>
+                    <th>交易日期</th>
+                    <!-- <th>周</th> -->
+                    <!-- <th>所属期间</th> -->
+                    <th>一级科目</th>
+                    <th>二级科目</th>
+                    <th>三级科目</th>
+                    <th>交易商家</th>
+                    <th>账户</th>
+                    <th>金额(元)</th>
+                    <th>摘要</th>
+                    <!-- <th>记录时间</th> -->
+                    <!-- <th>操作</th> -->
+                </tr>
+            </thead>
+
+            <tbody style="font-size:14px">
+                {% for rm in record_moneys %}
+                    <tr>
+                        <td>{{ rm.trading_date }}</td>
+                        <!-- td>{{ rm.trading_year }}</td> -->
+                        <!-- <td>{{ rm.trading_month }}</td> -->
+                        <!-- <td>{{ rm.trading_day }}</td> -->
+                        <!-- <td>{{ rm.trading_week }}</td> -->
+                        <!-- <td>{{ rm.trading_period }}</td> -->
+                        <td>{{ rm.trading_FLAT }}</td>
+                        <td>{{ rm.trading_SLAT }}</td>
+                        <td>{{ rm.trading_TLAT }}</td>
+                        <td>{{ rm.trader }}</td>
+                        <td>{{ rm.account }}</td>
+                        <td class="text-right">{{ rm.amount }}</td>
+                        <td class="text-left">{{ rm.summary}} </td>
+                        <!-- <td>{{ rm.record_time }}</td> -->
+                        <!-- <th>
+                            <a type="button">删除</a>
+                            <a>编辑</a>
+                        </th> -->
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="text-left" colspan="8">
+                            <!--单元格合并，colspan="8"意思是第一个单元格的长度改变成8个单元格的长度，
+                                也就是把第一个单元格长度变长八倍，第二个单元格的<td></td>删除。-->
+                            尚未添加任何记录。
+                        </td> 
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 创建一个分割条 -->
+    <div class="container-fluid" style="height:30px" ></div>
+
+    <!-- 通过Ajax异步获取表格数据 -->
+    <script>
+         // 时间范围的数据改变以后
+         //$("#id_time_filter").change(function(){    
+         //   $.ajax({
+         //       url: '/RecordMoney/Ajax/LoadQuery/',
+         //       type: 'GET',
+         //       data: {'time_filter': $(this).val()}
+         //   }).done(function(data){
+         //       record_moneys = data.record_moneys;
+         //       time_filter_label= data.time_filter_label;   
+         //   });
+         //});
+    </script>
+{% endblock body %}
+
+
+{% block footer %}
+    {% include 'RecordMoney/Footer.html' %}
+{% endblock footer %}

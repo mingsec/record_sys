@@ -1,0 +1,73 @@
+<!-- extends表明此页面继承自HomePage中的base.html文件 -->
+{% extends "base.html" %}
+
+
+{% block header %}
+    <!-- 配置顶部导航栏 -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" role="navigation">
+        <!--配置左上角的LOGO--> 
+        <a class="navbar-brand" href="#">
+            <h3><i>Record System</i></h3>
+        </a>
+
+        <!--配置折叠菜单按钮--> 
+        <button class="navbar-toggler"                  type="button" 
+                data-toggle="collapse"                  data-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent"  aria-expanded="false" 
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!--配置动态折叠菜单的内容--> 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">时间记录</a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">收支记录</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">后台管理</a>
+                </li>
+            </ul>
+        </div>                      
+    </nav>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <!-- 分割条 -->
+        <div style="padding-top:30px"></div>
+
+        <!-- 首页卡片式的快速入口，每行4列(row-cols-md-4) -->
+        <div class="row row-cols-2 row-cols-md-4">
+            <!-- 记录时间的快速入口 -->
+            <div class="col mb-4">
+                <div class="card shadow p-0 mb-0 bg-white rounded"
+                     onclick="window.open('/RecordTime/NewRecord','_self')">      
+                    <div class="card-header">
+                        <h5 class="card-title">RECORD TIME</h5>
+                        <p class="card-subtitle text-muted"><small>无论你做了什么，都记下来！</small></p>
+                    </div>
+                    <img src="../static/images/RecordTime/recordtimecard.jpg" class="card-img-top" alt="">
+                </div>
+
+            </div>
+
+            <!-- 记录收支的快速入口 -->
+            <div class="col mb-4">
+                <div class="card shadow p-0 mb-0 bg-white rounded"
+                     onclick="window.open('/RecordMoney/NewRecord','_self')">
+                    <div class="card-header">
+                        <h5 class="card-title">RECORD MONEY</h5>
+                        <p class="card-subtitle text-muted"><small>无论你花了多少，都记下来！</small></p>
+                    </div>
+                    <img src="../static/images/RecordMoney/recordmoneycard.jpg" class="card-img-top" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
