@@ -1,18 +1,26 @@
+'''
+@Descripttion: 
+@version: 
+@Author: Zefeng Neo Zhu
+@Date: 2020-07-17 11:27:39
+@LastEditors: Zefeng Neo Zhu
+@LastEditTime: 2020-07-17 11:34:52
+'''
 import os
 
 from flask import Flask, render_template
 
 
 def create_app(test_config=None):
-    '''创建并配置应用'''
+    """ 创建并配置应用
+    """
 
-    # 创建 Flask 实例
+    ''' 创建 Flask 实例 '''
     # __name__ 是当前 Python 模块的名称。应用需要知道在哪里设置路径， 使用 __name__ 是一个方便的方法。
     # instance_relative_config=True 告诉应用配置文件是相对于实例文件夹 <instance folder> 的相对路径。
     # 实例文件夹在 app 包的外面，用于存放本地数据（例如配置密钥和数据库），不应当提交到版本控制系统。
     app = Flask(__name__, instance_relative_config=True)
 
-    app.debug = True
     # 设置应用的缺省配置
     # SECRET_KEY 是被 Flask 和扩展用于保证数据安全
     # --在开发过程中，为了方便可以设置为 'dev' ，但是在发布的时候应当使用一个随机值来重载它
@@ -38,7 +46,7 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/')
     def homepage():
-        return render_template('HomePage.html')
+        return render_template('homepage.html')
 
     # 导入并注册数据库
     from . import db

@@ -17,17 +17,16 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 # @bp.route 关联了 URL /register 和 register 视图函数，当 flask 收到一个指向 /auth/register 的请求时就会调用 register 视图并把其返回值作为响应
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    '''
-    用户注册
+    """用户注册
 
     当用户初始访问 auth/register 时，或者注册出错时，显示一个注册表单。
-    '''
+    """
 
     # 如果用户提交了表单，那么 request.method 将会是 'POST', 并开始验证用户的输入内容
     # request.form 是一个特殊类型的 dict ，其映射了提交表单的键和值
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
         db = get_db()
         error = None
 
@@ -59,20 +58,20 @@ def register():
         flash(error)
 
     # render_template() 会渲染一个包含 HTML 的模板。
-    return  
+    return render_template('auth/register.html')
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
-    '''
+    """
     用户登录
 
     当用户初始访问 auth/login 时，显示一个登录表单。
-    '''
+    """
 
     if request.method == 'POST':
         # 查询用户并存放在变量中，以备后用
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
         db = get_db()
         error = None
         user = db.execute('SELECT * FROM auth_user WHERE username = ?', (username,)).fetchone()
@@ -90,7 +89,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for('homepage'))
 
         flash(error)
 
