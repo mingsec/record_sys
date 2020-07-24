@@ -1,3 +1,13 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: Zefeng Neo Zhu
+ * @Date: 2020-07-24 15:30:55
+ * @LastEditors: Zefeng Neo Zhu
+ * @LastEditTime: 2020-07-24 17:27:58
+--> 
+
+
 <!-- extends表明此页面继承自Hbase.html文件 -->
 {% extends 'base.html' %}
 
@@ -31,7 +41,9 @@
         <div class="row row-custom">
             <div class="col">
                 <div class="bg-white p-4 mt-3 border rounded">
-                    <form method="post">
+                    <form action="{{ url_for("auth.login") }}" method="post" name="login">
+                        {{ form.csrf_token }}
+                        
                         <div class="form-group" >
                             <label for="username" class="text-dark">用户名</label>
                             <input type="text" class="form-control form-control-sm" name="username" id="username" placeholder="请输入用户名...">

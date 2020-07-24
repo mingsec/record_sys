@@ -7,19 +7,33 @@ import functools
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import login_user, logout_user, current_user, login_required
 
-from app.db import get_db
+from app import db, login_manager
+from app.forms import LoginForm
+from app.models import User
 
+
+''' 定义蓝图 '''
 # __name__ 用于确定蓝图在哪里定义的
 # url_prefix 会自动在所有与该蓝图关联的 URL 前面添加 '/auth'
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-# @bp.route 关联了 URL /register 和 register 视图函数，当 flask 收到一个指向 /auth/register 的请求时就会调用 register 视图并把其返回值作为响应
+@login_manager.user_loader
+def load_user(id):
+    """
+        从数据库加载用户
+    """
+    return User.query.get(int(id))
+
+# @bp.route 关联了 URL /register 和 register 视图函数，
+# 当 flask 收到一个指向 /auth/register 的请求时就会调用 register 视图并把其返回值作为响应
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    """用户注册
+    """
+        用户注册
 
-    当用户初始访问 auth/register 时，或者注册出错时，显示一个注册表单。
+        当用户初始访问 auth/register 时，或者注册出错时，显示一个注册表单。
     """
 
     # 如果用户提交了表单，那么 request.method 将会是 'POST', 并开始验证用户的输入内容
@@ -63,37 +77,26 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     """
-    用户登录
+        用户登录
 
-    当用户初始访问 auth/login 时，显示一个登录表单。
+        当用户初始访问 auth/login 时，显示一个登录表单。
     """
 
-    if request.method == 'POST':
-        # 查询用户并存放在变量中，以备后用
-        username = request.form.get('username')
-        password = request.form.get('password')
-        db = get_db()
-        error = None
-        user = db.execute('SELECT * FROM auth_user WHERE username = ?', (username,)).fetchone()
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('homepage'))
 
-        # check_password_hash() 比较以相同的方式提交的密码的哈希值，如果匹配成功，那么密码就是正确的
-        if user is None:
-            error = "用户名输入错误。"
-        elif not check_password_hash(user['password'], password):
-            error = "密码错误。"
+    form = LoginForm()
 
-        # session 是一个 dict ，它用于储存横跨请求的值
-        # --当验证成功后，用户的 id 被储存于一个新的会话中
-        # --会话数据被储存到浏览器 cookie 中，在后继请求中，浏览器会返回它以供使用
-        # --flask 会安全对数据进行签名 以防数据被篡改
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('homepage'))
+    if form.validate_on_submit():
+        session['remember_me'] = form.remember_me.data
 
-        flash(error)
+        login_user(username)
 
-    return render_template('auth/login.html')
+        flask.flash('Logged in successfully.')
+
+        return redirect(url_for('homepage'))
+       
+    return render_template('auth/login.html', form=form)
 
 @bp.route('/logout')
 def logout():
